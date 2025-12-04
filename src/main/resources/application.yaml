@@ -1,8 +1,17 @@
 spring:
-  application:
-    name: discount-coupon
-#    Banco H2
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:loja;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-    username: sa
-    password:
+  datasource:
+    # Banco H2
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/discount_coupon?createDatabaseIfNotExist=true&serverTimezone=UTC&useSSL=false&characterEncoding=UTF-8&allowPublicKeyRetrieval=true
+    username: root
+    password: 123
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: true
+server:
+  error:
+    include-stacktrace: never
