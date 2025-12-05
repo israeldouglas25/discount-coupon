@@ -2,6 +2,7 @@ package com.coupon.discount_coupon.controllers;
 
 import com.coupon.discount_coupon.domain.Coupon;
 import com.coupon.discount_coupon.services.CouponService;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ public class CouponController {
     }
 
     @PostMapping
+    @Transactional
     public ResponseEntity<Coupon> create(@RequestBody @Valid Coupon coupon, UriComponentsBuilder uriBuilder) {
         var createdCoupon = couponService.create(coupon).getBody();
         URI uri = uriBuilder.path("/coupons/{id}").buildAndExpand(createdCoupon.getId()).toUri();
@@ -36,6 +38,7 @@ public class CouponController {
     }
 
     @DeleteMapping("/{id}")
+    @Transactional
     public ResponseEntity<Void> delete(@PathVariable String id) {
         return couponService.delete(id);
     }
