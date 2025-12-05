@@ -1,9 +1,11 @@
 package com.coupon.discount_coupon.domain;
 
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 
@@ -12,7 +14,6 @@ import java.util.UUID;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Coupon {
 
@@ -22,8 +23,20 @@ public class Coupon {
     private UUID id;
     private String code;
     private String description;
-    private BigDecimal discountValue;
+    private Double discountValue;
     private Instant expirationDate;
-    private Boolean published;
+
+    @Enumerated(EnumType.STRING)
+    private CouponStatus status;
+
+    private Boolean published = false;
+    private Boolean redeemed = false;
+
+    public Coupon(String code, String description, Double discountValue, Instant expirationDate) {
+        this.code = code;
+        this.description = description;
+        this.discountValue = discountValue;
+        this.expirationDate = expirationDate;
+    }
 
 }
