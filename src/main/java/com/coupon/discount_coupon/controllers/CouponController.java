@@ -1,29 +1,42 @@
 package com.coupon.discount_coupon.controllers;
 
 import com.coupon.discount_coupon.domain.Coupon;
-import com.coupon.discount_coupon.domain.Database;
+import com.coupon.discount_coupon.services.CouponService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.util.UriComponentsBuilder;
+
+import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/coupons")
 public class CouponController {
 
+    @Autowired
+    private CouponService couponService;
+
+    @GetMapping
+    public ResponseEntity<List<Coupon>> getAll() {
+        return couponService.getAll();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<Coupon> findById(@PathVariable String id) {
-        Coupon coupon = new Database().getCouponById(id);
-        return ResponseEntity.ok(coupon);
+        return couponService.findById(id);
     }
 
     @PostMapping
-    public ResponseEntity<Coupon> create(@RequestBody Coupon newCoupon) {
-        Coupon createdCoupon = new Database().addCoupon(newCoupon);
-        return ResponseEntity.ok(createdCoupon);
+    public ResponseEntity<Coupon> create(@RequestBody @Valid Coupon coupon, UriComponentsBuilder uriBuilder) {
+        var createdCoupon = couponService.create(coupon).getBody();
+        URI uri = uriBuilder.path("/coupons/{id}").buildAndExpand(createdCoupon.getId()).toUri();
+        return ResponseEntity.created(uri).body(createdCoupon);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable String id) {
-        new Database().removeCoupon(id);
-        return ResponseEntity.noContent().build();
+        return couponService.delete(id);
     }
 }
